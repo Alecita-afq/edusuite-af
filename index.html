@@ -4338,6 +4338,8 @@ function subirPruebaADrive() {
 function _subirConToken(token) {
   toast('\u23f3 Generando archivo con formato...');
   var d=window._datosPrueba;
+  var txt2 = document.getElementById('c-pr') ? document.getElementById('c-pr').textContent : '';
+  d.items = parsearItemsPrueba(txt2, d.items);
   var nombre='Prueba_'+d.tipo+'_'+d.unidad.replace(/[^a-zA-Z0-9\s]/g,'').trim().replace(/\s+/g,'_')+'.docx';
   var carpeta='EduSuite AF 2026/Pruebas/'+d.curso;
   var iconosNecesarios2 = obtenerIconosUsados(d);
