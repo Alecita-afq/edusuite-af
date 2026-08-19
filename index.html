@@ -191,8 +191,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;co
       <tr><td><b>6° Básico</b></td><td>135 min/sem</td><td>Unit 1 L2 — Past simple (pág.45)</td><td>8</td><td><span class="t-curso">🔄 En curso</span></td></tr>
       <tr><td><b>7° Básico</b></td><td>135 min/sem</td><td>Unit 2 Healthy habits (pág.25)</td><td>5</td><td><span class="t-curso">🔄 En curso</span></td></tr>
       <tr><td><b>8° Básico</b></td><td>135 min/sem</td><td>Repaso → Comparativos</td><td>5</td><td><span class="t-curso">🔄 Alta adecuación</span></td></tr>
-    </table>
+  <div class="panel" style="margin-top:16px;background:#FFF8E1;border:1px solid #F0C36D">
+    <h2>💾 Respaldo de Datos (Notas, Calendario, Cronograma)</h2>
+    <p style="font-size:13px;color:var(--gris2);margin:6px 0 12px">Si cambias de dirección web (ej: pasaste de archivo local a GitHub Pages) o de computador, tus datos NO se mueven solos. Usa esto para pasarlos de un lugar a otro.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="exportarDatosApp()">⬇️ Exportar mis datos</button>
+      <label class="btn btn-success" style="cursor:pointer;display:inline-block">⬆️ Importar datos<input type="file" accept=".json" onchange="importarDatosApp(event)" style="display:none"></label>
     </div>
+    <div id="respaldo-msg" style="font-size:12px;margin-top:8px;color:var(--verde)"></div>
   </div>
 </div>
 
@@ -651,8 +657,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;co
   <div id="notas-wrap"></div>
 </div>
 
-<div id="modal-nota" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;">
-  <div style="background:#fff;border-radius:12px 12px 0 0;padding:18px 16px;width:100%;max-width:520px;max-height:88vh;overflow-y:auto;padding-bottom:20px">
+<div id="modal-nota" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;flex-direction:column;align-items:center;justify-content:flex-end;">
+  <div style="background:#fff;border-radius:12px 12px 0 0;padding:18px 16px;width:100%;max-width:520px;max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:20px">
     <div style="width:34px;height:4px;background:var(--gris3);border-radius:2px;margin:0 auto 12px"></div>
     <h3 style="font-size:14px;font-weight:700;color:var(--azul);margin-bottom:12px">Agregar Nota</h3>
     <div class="fila"><label>Nombre estudiante</label>
@@ -686,15 +692,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;co
       </select>
     </div>
     <div class="fila"><label>Semestre</label><select id="mn-sem"><option value="1">1&deg; Semestre</option><option value="2">2&deg; Semestre</option></select></div>
-    <div style="display:flex;gap:8px;margin-top:12px">
+    <div style="display:flex;gap:8px;margin-top:12px;position:sticky;bottom:-20px;background:#fff;padding:10px 0 4px;border-top:1px solid var(--gris3)">
       <button class="btn btn-copy" onclick="closeModalNota()" style="flex:1">Cancelar</button>
       <button class="btn btn-primary" onclick="agregarNota()" style="flex:1">Guardar</button>
     </div>
   </div>
 </div>
 
-<div id="modal-curso" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;">
-  <div style="background:#fff;border-radius:12px 12px 0 0;padding:18px 16px;width:100%;max-width:560px;max-height:88vh;overflow-y:auto;padding-bottom:20px">
+<div id="modal-curso" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;flex-direction:column;align-items:center;justify-content:flex-end;">
+  <div style="background:#fff;border-radius:12px 12px 0 0;padding:18px 16px;width:100%;max-width:560px;max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:20px">
     <div style="width:34px;height:4px;background:var(--gris3);border-radius:2px;margin:0 auto 12px"></div>
     <h3 style="font-size:14px;font-weight:700;color:var(--azul);margin-bottom:12px">Agregar notas al curso</h3>
     <div class="info-box">La n&oacute;mina ya est&aacute; cargada. Agrega la nota de cada alumno separada por coma.</div>
@@ -717,12 +723,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;co
       <textarea id="mc-lista" style="min-height:150px;font-size:11px;font-family:monospace" placeholder="Perez Gonzalez, Juan, 15&#10;Martinez Lopez, Ana, 38&#10;..."></textarea>
     </div>
     <div id="mc-preview" style="margin-top:8px;overflow-x:auto"></div>
-    <div style="display:flex;gap:8px;margin-top:12px">
-      <button class="btn btn-copy" onclick="closeModalCurso()" style="flex:1">Cancelar</button>
-      <button class="btn btn-primary" onclick="previsualizarCurso()" style="flex:1">Previsualizar</button>
-    </div>
-    <div id="mc-confirmar" style="display:none;margin-top:8px">
-      <button class="btn btn-success" style="width:100%" onclick="guardarNotasCurso()">Confirmar y guardar todas</button>
+    <div style="position:sticky;bottom:-20px;background:#fff;padding:10px 0 4px;border-top:1px solid var(--gris3);margin-top:12px">
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-copy" onclick="closeModalCurso()" style="flex:1">Cancelar</button>
+        <button class="btn btn-primary" onclick="previsualizarCurso()" style="flex:1">Previsualizar</button>
+      </div>
+      <div id="mc-confirmar" style="display:none;margin-top:8px">
+        <button class="btn btn-success" style="width:100%" onclick="guardarNotasCurso()">Confirmar y guardar todas</button>
+      </div>
     </div>
   </div>
 </div>
@@ -802,8 +810,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;co
   </div>
 </div>
 
-<div id="modal-caleval" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;">
-  <div style="background:#fff;border-radius:12px 12px 0 0;padding:18px 16px;width:100%;max-width:520px;max-height:88vh;overflow-y:auto;padding-bottom:20px">
+<div id="modal-caleval" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;flex-direction:column;align-items:center;justify-content:flex-end;">
+  <div style="background:#fff;border-radius:12px 12px 0 0;padding:18px 16px;width:100%;max-width:520px;max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:20px">
     <div style="width:34px;height:4px;background:var(--gris3);border-radius:2px;margin:0 auto 12px"></div>
     <h3 id="modal-caleval-titulo" style="font-size:14px;font-weight:700;color:var(--azul);margin-bottom:12px">+ Agregar Evaluaci&oacute;n</h3>
     <div class="fila-row">
@@ -818,15 +826,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;co
     </div>
     <div class="fila"><label>Contenido / OA</label><input type="text" id="ce-cont" placeholder="Ej: Unit 3 - OA 1, OA 2, OA 10"></div>
     <div class="fila"><label>Observaciones</label><input type="text" id="ce-obs" placeholder="Ej: Incluye versi&oacute;n NEE"></div>
-    <div style="display:flex;gap:8px;margin-top:12px">
+    <div style="display:flex;gap:8px;margin-top:12px;position:sticky;bottom:-20px;background:#fff;padding:10px 0 4px;border-top:1px solid var(--gris3)">
       <button class="btn btn-copy" onclick="closeModalCalEval()" style="flex:1">Cancelar</button>
       <button class="btn btn-primary" onclick="agregarEvaluacion()" style="flex:1">Guardar</button>
     </div>
   </div>
 </div>
 
-<div id="modal-agregar-pie" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;">
-  <div style="background:#fff;border-radius:12px 12px 0 0;padding:18px 16px;width:100%;max-width:500px;max-height:88vh;overflow-y:auto;padding-bottom:20px;position:fixed;bottom:0;left:50%;transform:translateX(-50%);">
+<div id="modal-agregar-pie" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;flex-direction:column;align-items:center;justify-content:flex-end;">
+  <div style="background:#fff;border-radius:12px 12px 0 0;padding:18px 16px;width:100%;max-width:500px;max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:20px;position:fixed;bottom:0;left:50%;transform:translateX(-50%);">
     <div style="width:34px;height:4px;background:var(--gris3);border-radius:2px;margin:0 auto 12px"></div>
     <h3 style="font-size:14px;font-weight:700;color:var(--azul);margin-bottom:12px">Agregar / Editar Alumno PIE</h3>
     <div class="fila">
@@ -859,7 +867,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;co
       </select>
     </div>
     <div class="info-box" id="modal-pie-preview" style="display:none;margin-top:8px;font-size:11px"></div>
-    <div style="display:flex;gap:8px;margin-top:14px">
+    <div style="display:flex;gap:8px;margin-top:14px;position:sticky;bottom:-20px;background:#fff;padding:10px 0 4px;border-top:1px solid var(--gris3)">
       <button class="btn btn-copy" onclick="cerrarModalPIE()" style="flex:1">Cancelar</button>
       <button class="btn btn-primary" onclick="guardarAlumnoPIE()" style="flex:1">Guardar</button>
     </div>
@@ -877,7 +885,7 @@ const ESTADO_ACTUAL = {1:'Unit 3 \u2014 My body (partes del cuerpo)',2:'Unit 3 \
 const UNIDADES = {
   1:['Unit 1: Me and my family','Unit 2: At school','Unit 3: My body','Unit 4: Domestic animals and pets','Unit 5: Food','Unit 6: My house','Unit 7: The weather','Unit 8: Toys and games'],
   2:['Unit 1: Wild animals','Unit 2: Sports and free time','Unit 3: My clothes','Unit 4: Jobs and professions','Unit 5: My classmates','Unit 6: My city','Unit 7: Festivities','Unit 8: Musical instruments'],
-  3:['Unit 1: My school day (rutinas, hora, dias)','Unit 2: My neighborhood (barrio, lugares, preposiciones)','Unit 3: Food and health (alimentos, habitos saludables)','Unit 4: Free time (tiempo libre, hobbies, deportes)'],
+  3:['Unit 1: Time for school (utiles escolares, dias, materias)','Unit 2: Sports and free-time activities (deportes, can/can\'t)','Unit 3: Seasons come and go (clima, estaciones, ropa)','Unit 4: Wild animals (animales salvajes, does it have...?)','Unit 5: Transport (medios de transporte, is it...?)','Unit 6: Summer fun (actividades de verano, do you like...?)'],
   4:['Unit 1: Around town - My town and My house','Unit 2: Around the world - Countries and events','Unit 3: The universe - Solar system and space','Unit 4: Minibeasts - Small creatures','Unit 5: Summer camp - Activities and tips','Unit 6: Story world - Characters and superheroes'],
   5:['Unit 1: Traveling - Explorando Chile','Unit 2: Cultures and traditions - Tradiciones del mundo','Unit 3: Languages - Idiomas del mundo','Unit 4: Jobs - Profesiones y trabajos'],
   6:['Unit 1: Artistic inspirations - Arte y expresion','Unit 2: World festivals - Festivales del mundo','Unit 3: Climate action - Medio ambiente','Unit 4: Foreign friends - Amigos del mundo'],
@@ -1753,7 +1761,7 @@ function genPC() {
       var sc = ov > 0 ? ov/(pMax-pMin+1) : -1;
       if (sc > mejorSc) { mejorSc = sc; mejor = e; }
     });
-    if (mejor && mejorSc > 0 && !tema) tema = mejor.nom;
+    if (mejor && mejorSc > 0 && (!tema || tema === _pcTemaAutoFill)) { tema = mejor.nom; _pcTemaAutoFill = mejor.nom; }
   }
   if (!tema && desc) tema = desc.split('.')[0].split(',')[0].trim();
   if (!tema) tema = 'Clase de Ingles';
@@ -4184,6 +4192,54 @@ ICON_LIB["shorts"] = "iVBORw0KGgoAAAANSUhEUgAAAL4AAAC+CAYAAACLdLWdAAAI4UlEQVR4nO
 ICON_LIB["sneakers"] = "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";
 ICON_LIB["blouse"] = "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";
 ICON_LIB["scarf"] = "iVBORw0KGgoAAAANSUhEUgAAAL4AAAC+CAYAAACLdLWdAAAQAElEQVR4nOyde3BUVZ7Hf5AElVcUISQgQ42gUCOiiAooDjjyGJ8IDlJQsCPjCLvjFKU4/mOxbhWurkOtMqwWishLRMRakMcIOyDiC4ERUEoeQZbXAAkJSEgICSHpZr6/SyfFI7l9b/e9tx/n+6k6dW73vd03uf095/zO75zzO5lCiIFkCiEGQuETI6HwiZFQ+MRIKHxiJBQ+MRIKnxgJhU+MhMInRkLhEyOh8ImRUPjESCh8YiQUPjESCp8YCYVPjITCJ0ZC4RMjofCJkVD4xEgofGIkFD4xEgqfGAmFT4yEwidGQuETI6HwiZFQ+MRIKHwfuRpcddVV2aFQKDsjIyM7HA5nN27cOPvcuXPZjRo1ytZrcFyK41KcK8W5UlxbimtLz5w5c7KkpKRUiC80EuKYdu3adUDWVRME2xb5tUgqYEvItYKO5C3FA/BdZVowaguI5ni7Nh3He0XI81FQ8k+cOHFYiCMo/MtpkpOT0xW1rwq8C4RlCR3pRhw3lyQGhaIc2W6kfE14vRspv6ioSN87K6QOY4Xfpk2bXJgUFwq7SyTviPcaSxoB8YeRHZALCoUmmFW7i4uLi8RAjBF+69at22VmZg6EqO9D+hXeai9EUfNoLQrH2pqamjXHjh07KgaQtsKPdCxrRX6fnK/RSRTUNMIzswpCZWXlupNA0pC0Ef511113FZruX6rQ8aOp0Hukm8kSNBETaasWAvR5NH19+PDhSkkDUln4GfCy9IYb8FcR86UP3msixE+qUAg2IF+LSmYt+gd/x3FIUpCUEj68LbegQ3pfpFbvj7yZJIArr7xSunTpouaUNGvWrC41bdrUSpe+17x5c4HZddF711xzjfVd8NVLRUWFnD592kowL6S8vPyi9zTp60vf08/++OOPAlemJAL8BqfxG3yuLQIKwmcoCNskRUh64efl5amX5Xd4uL9F3lECRMV6ww03WCK/8cYb63KYVYK/RZIBPBeB+SG7d++2CoEmPd6zZ49ViAL+Ww7gucxFPrewsPCgJDFJKXy11+FhGI6HOBYv+zXyWWVag9cK/EKRJ5PA3aIF4tChQ/UWCL9bCNz7HJ7bOmSz0UIvScZ+QVL9qjBl7sKDUrGPwINrIT6hpkevXr2kT58+cvfdd0u3bt0EHTcxAfSJZPv27bJ+/Xr55ptvZNOmTZbZ5Bc68ozsQ9x3DgbSNkqSkHDh60BSVlbWEzjU5IvLUU2WO++80xL5XXfdJd27dxcUMCHomYZCsm3bNqsQaGH49ttvfTOR1FWqrQDuOT/R4wWJEn5Wbm7ukIgpMxi5pypU0+X222+3RK6pR48egsErIdGprq6W77//vq5F2LJli+emEcQfwm++Cvkc9AVW6G0lYAIVPtyPPdDkjYVZMUrOT/DyhCZNmkjPnj3rhH7bbbdZ75H4qaqqku+++66uRdi6daucPevdtB+I/ziyBdDFLJhCP0hABCJ8mDPNUePOQCkfJR5xxx13WCJX80VFr7U88R+t/dUc2rBhg1UQNm/eLB4yD+kPBQUFFeIzgQgfLskvIfp7JE5uvvlmGTVqlAwbNszqoJLEU1ZWJh9//LF88MEHVqfZA9ZC+APEZ3wXPsybpjpdNlaXpA70DB06VMaMGWO5GUnysmvXLlmwYIFVEGKd4qPTJEBLmD3+uZokGOEPRLZaXNKvXz95/PHH5dFHHxWSeixdulQWLlwoX3/9tbgFwu9/9OjRL8RHfBd+27ZtH4brcLmTazt06GCJfeTIkWoeCUl9YLbIhx9+aKUjR444+gw8Sz3g7vxefCQI4T8E4a+wu0ZrdRV73759xUtWrVolK1askFatWsngwYPlnnvi7maQOPjqq6+sVmDZsmW218Eqbo1C8pP4SMKF//7778u9994rXjNp0iSZM2fORe/ddNNNMnnyZOndu7eQxDFlyhSZNm1ag+fRSviuy4SP09fU1IjXaLN6qeiVHTt2yGOPPSZPPfWUHDyY1HOo0hptiRsCndv9EgBpOUFl8eLFtudXrlxpjQG89NJL1hRgEhxa+eiEORucdQTiJC3H8XV00Qlvv/22zJs3Tx555BHLZZpKfQAVj/6fOqVg37590rJlS2sO0pNPPmkdJytLliyJdomv3pxaEm7jz507VwYOHCheoaOKsbpA8bdaptCQIUOsGZvJhApcR0l1NqWmhvzk6g1bt26dtGjh2+TWmFE//0MPPWQ79wemb+fi4uK94jNpV+Nv3Bj7zFcMmsj06dOtlJuba02F0MlummsKgsLCQsnPz7dEokmPd+7c6erzM2fOlIkTJ0oyoavFxo4dG23C24YgRK+knfC1NvQCDKDIJ598YqVadH6QToDTwoCBOcukyM7OlmuvtZ9vV1paKj/99JOcOHHCSiqC2rw26XkV+qlTpyRedFJZMqF2/fjx462FMXbobE0JiLQS/vHjx61m3i/UjNI0Y8aMy87pnH9dg6uFQZPOYVFxYyBGgsbPhSVu0L9Dn9Vrr73m6PqqqqpFEhBpJXztqCYKXbyhSU2NRNO6dWuJBTVD1LS69dZbJVZ0dLZ2hZe6lV0UwgmoKMokINJK+PX57i8ETelvMCp4Mw7/Q9KYaKZXfbz44osya9asutfaSdY1x7W53bRvNdW0H6IpRlNtDgat3pAASRvh64is/gA2FKA2Vgf/Ytjl02CajIwsiLlb0gydouGG5cuXXyR6RVuugFqvDRD97yRg0mIAa82aNfXa3Zfw59oDdDZL0HmdjgfeNxwO/xwtwb/L+YCqaYFbU+eLLwJxnV8GnvsSmFe/lgSQ8jW+2pQTJkywvQYP+BjGEmbWdw4F4ACy/9SEZv125NoKjIJJ1FaSAP3bke1A/gNaqG0oqBuRa8DbvzX0Gbc1voYdCRr8P8+hRXldEkRKC19rqmeffdbyoNgBEf+3k9gu+CF0HZ2miW3atLkhKyvrFzi+DelW/FDd8D3Xiw/guyvw3QU4/AeOt2tcexzvqKio+AH/24lLr8cYw6/twqG4FX4UE9FrCjRmEvz130gCSbjwn3jiCWvW5P333y8PPPCAFcgpGupS1OmtixY58n6VVFdXTxeXwA25B5mmujm0uposFAp1x2HryJY+LZHr/AANZdhKXyNvqbuh4FhXZGth0/WjlSpuXKt5GVIBjg+h9i5EU3/EbURifP8gu/Nuha9uYL+JtFwz8bdPhej9v2EUkmI+/oWoPzwnJ8dKOoUANa81/K4DSuoT1xgw6h93wVDY8kslTdAocygwtoux9+7d62rxffv2/mwVEGnJNOT4IrSmCySJCKLGdxWdSH3hOmXYi2nDEMifUGDSRvQK/ifb1Tq6ZNON6HWFlEecgMD3QugHkP8/Xn8Jsf+fJCm+Cx8/1KYERS17C6J3NmSYWgy2O+l2UY9OlbADIv5XCHgGWoVrYZu31J0bMzMzdQZcJV5bOzUWFRUVS4rhu/BhnpTDW/KVF+FFXPAparI/ShoCIQ6yC1jRv39/cUO0kCC4n1UyIksBfV0OGCSB+PHRuRyBB7hAo+iKv2jncRJE/yCOw5JmoALpGRl5rhftE2nUZzd8+umntudRo3sSLCfZCET48BqgtSwcXVVV9TMIU+fLrvehEGgkhy64z8uSvltb/sXu5IAB7uIwacDYzz//vMHz+ImKUYnkSxoSqDszsgHxVE26CyH85I/geIBu5YP8anEJfhjdqvJjpIUQ/JeSxsCVqi5M247t6NGjxQ0aBjDK/HjX8ZBShYT58dEKqDvh7UjSZroXOsE3Qcyd5fzGyu0iu4e3jsTK1wUKOsBzGK/3oWO1OtGDIEGC//sVO9tel03q0kM3aNi/KPdcK2kKdzZPAWDbPwbR/6/dNToF2M2a4f3791vXR7E4fwZTx371SIrCoPFJDkwcnXFmO2VX1we7XSg/depUW9Hj3D6Yj2kpeoX7wCY3mRCgrn20jaf43HPPiRt0Yl+0aAe4b+JW9QQAa/wkBrX9u8jutLtGI0i7iVKhtfwzzzwTrbYvR0rHwb86KPwkBaLXAbjfRrtOp2S7icD+5ptvWrubRGGa32G6Ew07t0lIbm7uWIj5XSRbU1SD7Gqn1qnwdW8rjWsTpUNbCfJKSkpKJY2hjZ9kwIPzXxgtnR1N9B07drTi5zgVvYY40ShrDsYN30x30Ss0dZKHTJg36lgfHu1CnX353nvvOQ4VqKIfPny4NbU7Coerq6sniwFQ+ElAZHO8v+Kwn5Pr33jjDencubOTS63ocCp6naNvB1qCGqRhOqlQDICmToLRrZIg+u0wWRyJXiOS6Uo1J2jksgcffDCq6BXcfxJahG/FENi5TRA6MIUa9n8guJFOPzNixAgrKpkTu14jT6jHJ9p65AiB7DSYTNDUSQDowP4e2RQI+Bqnn3n++ect/3s0NHKZ7gbz0UcfiRNQ+LZWVVUNE8Og8AMEtnxnmDWz3SzK0WgKum2O7u0bDXVXjhs3zvEmaxHR3xtk6L5kgaZOAOTk5PSB4CdEQhg6rmyuuOIKKx5otHk4KnTdV0p3gnG6zEHj9ED0fU0UvcIa3z/UPfk4BDYBYu+lb7gZYdXIyzpt+JZbbmnwGo028frrr1sb6MENKU5R0VdUVPSDm9NI0Sus8T0GvvVWzZo1+zeI/A942U5iQGMMvfzyy9ZSwvpQO143r3jnnXcEAhY3XCD6QKNIJRus8T0ANXsHZEORHkb6JVITiQGNTPzqq682uIRQ973SiNA6szKWTesg+lk1NTXPQPTG73hH4cdGI9jtvTMyMlTomuLaMEtNII0o98ILL0jTpk0vOqdLA5cuXSrz58+3Oq+xoGtnkf1LYWHh34RYUPgugOnxc4j9TzgcgeQ+CH09dO3a1fLNX7oZg8az1Pc1TKJbc+ZCIPql8Az93u+dwlMNCt8hEH03CGg9Dj3ZS1PXx+oobH07NK5evdravC2eYK4aoxMtyUTU8rOEXAY7tw6B/b0YQop7oGfQoEHWzuq6wXRD6OZycWzKoGETdKniFIzGJjw4a7LCGt8hdoGcopGVlWUNQD399NPSqVMn22u1AxuL6CMBWt8KhUJTUjGkX9BQ+A6BsFq48cMrOm1YY91oDa/Rn51w4MABcYlGj3srHA7/mYJ3DoXvMbrvra6B1RmUbiMXOyUShU77G/Ph9VlkwsIRr6HwHYLaPtTQOa3NddBJk9swH/Xcx/Y8NK9hBP8Ccyj+OOoGQ+F7gLoiX3nlFQkCmDRrYdJQ9HHChSgOQU3bYJB/iFE8vI8Q/2GNT4yEwidGQuETI6HwiZFQ+MRIKHxiJBQ+MRIKnxgJhU+MhMInRkLhEyOh8GPg0vk0Gt/GwS4jjti1a9dl3+92HQCJDp+oQ/Ly8gohwFw9VmEmSoyhUOjhoqKivwqJC9b4xEgofGIkFD4xEgrfA66//vp64+PEgu5esmzZsrrXiexPpDMUfgxcKkQVvtvdxRtCg0ldKHyK3h8ofGIkFD4xEgqfGAmFQvRTeQAAAztJREFUT4yEwidGQuETI6HwiZFQ+MRIKHxiJBQ+MRIKnxgJhU+MhMKPAS49TH34RB3CpYfpBWt8YiQUPjESCp8YCYXvAVx6mHpQ+DHApYepD4VPjITCJ0ZC4RMjofCJkVD4xEgofGIkFD4xEgqfGAmFT4yEwidGQuETI6HwiZFQ+MRIKHxiJBQ+MRIKnxgJhU+MhMInRkLhO6RRo0Zhm3Pi4X2inT8nJG4ofOdUNHiiokI8u0n07yoXEjeNhTji3LlzpQ2dKy/3TotlZWW258Ph8EkhccMa3yEwMRoUfkFBgXhFtO/KyMig8D2ANb5DUOM3KLhjx45JSUmJeEF+fr7t+TNnzlD4HkDhOwQ1/n6789EE65Tdu3fbnS5FASsVEjcUvnO22J387LPPJF72798vBw8ebPA8Wp2/C/EECt8h1dXVm+3OL1y4UOJl3rx50S7ZLMQTKHyHwI7fgxq3QV+j2viTJ0+WWNm5c6fMnj3b9hrcf6sQT8gQ4pgWLVr8ArZ+94bOb9myRTp16iRdu3YVNxQVFcmYMWOsnVXsQMd2HFKVkLih8F0A4R+H8MfaXbNy5UrJzMyU3r17ixO2bt0qI0eOlEOHDkW7dA5anY+EeAJD8bokLy9vF8QftUrv3LmzjB8/Xvr16yft27e/6FxlZaVs3LhRVq1aJQsWLBAnhEKh3mgZNgnxBArfJbm5uQ80btz4Ezefad68ubRr187KDx8+LMXFxeKS5RjYGiLEMyj8GECtPx+1/mgJhhPhcLjr0aNHjwnxDHp1YqCqquppeFhcV9sx8keK3nso/BiA90VnkvVHOiI+gYKFij78PEyc+AcIyGXQ1ImDtm3b5mRkZKzBYXfxljMQ/W9Q07vqSxDn0J0ZB6fBqVOnZqHTqjV/d9j92RIfZ1HTvwtTajhcl1uE+AZrfA9Bp3ccxD8chwPcfA5iz8fnVpw9e3bq8ePHC4X4DoXvA3BdNpXz4u+J1AbCvhr51RB3VmRBy0kcn4Q5sx+uUXVVRh29It5C4RMj4QosYiQUPjESCp8YCYVPjITCJ0ZC4RMjofCJkVD4xEgofGIkFD4xEgqfGAmFT4yEwidGQuETI/knAAAA//+r+UDFAAAABklEQVQDAIrjdL74qHGxAAAAAElFTkSuQmCC";
+function exportarDatosApp() {
+  var datos = {
+    _info: 'Respaldo Suite Pedagogica EduSuite AF - ' + new Date().toISOString(),
+    notas_suite_2026: localStorage.getItem('notas_suite_2026') || '{}',
+    caleval_v5: localStorage.getItem('caleval_v5') || '{}',
+    cronograma_v5: localStorage.getItem('cronograma_v5') || '{}'
+  };
+  var blob = new Blob([JSON.stringify(datos, null, 2)], {type: 'application/json'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  var fecha = new Date().toISOString().slice(0,10);
+  a.href = url;
+  a.download = 'respaldo_suite_pedagogica_' + fecha + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  var msg = document.getElementById('respaldo-msg');
+  if (msg) msg.textContent = '✅ Datos exportados. Guarda ese archivo y usa "Importar datos" en la otra version de la app.';
+}
+
+function importarDatosApp(event) {
+  var file = event.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var msg = document.getElementById('respaldo-msg');
+    try {
+      var datos = JSON.parse(e.target.result);
+      var claves = ['notas_suite_2026', 'caleval_v5', 'cronograma_v5'];
+      var importadas = [];
+      claves.forEach(function(k) {
+        if (datos[k] !== undefined) {
+          localStorage.setItem(k, datos[k]);
+          importadas.push(k);
+        }
+      });
+      if (importadas.length) {
+        if (msg) msg.innerHTML = '✅ Datos importados correctamente (' + importadas.join(', ') + '). Recargando...';
+        setTimeout(function(){ location.reload(); }, 1500);
+      } else {
+        if (msg) { msg.style.color = 'var(--rojo)'; msg.textContent = '⚠️ El archivo no tiene datos reconocibles.'; }
+      }
+    } catch (err) {
+      if (msg) { msg.style.color = 'var(--rojo)'; msg.textContent = '⚠️ Error al leer el archivo: ' + err.message; }
+    }
+  };
+  reader.readAsText(file);
+}
+
 function base64ToArrayBuffer(base64) {
   // Conversion directa y sincronica, sin usar fetch() sobre data: URIs
   // (fetch en data: URIs tiene fallas conocidas en Safari/WebKit en ciertos contextos).
@@ -4549,7 +4605,7 @@ function abrirModalAgregarPIE(c) {
   if (cursoPIE) cursoPIE.value = c;
   var nom = document.getElementById('modal-pie-nombre');
   if (nom) nom.value = '';
-  modal.style.display = 'block';
+  modal.style.display = 'flex';
 }
 function cerrarModalPIE() {
   var modal = document.getElementById('modal-agregar-pie');
@@ -4818,7 +4874,7 @@ function openModalNota(){
   var semAct = document.getElementById('n-sem') ? document.getElementById('n-sem').value : '1';
   var mnSem = document.getElementById('mn-sem');
   if (mnSem && semAct !== 'ambos') mnSem.value = semAct;
-  document.getElementById('modal-nota').style.display='block';
+  document.getElementById('modal-nota').style.display='flex';
 }
 function closeModalNota(){document.getElementById('modal-nota').style.display='none';}
 function aplicarReglaAsist() {
@@ -4884,7 +4940,7 @@ function openModalCurso(){
   document.getElementById('mc-preview').innerHTML='';
   document.getElementById('mc-confirmar').style.display='none';
   document.getElementById('mc-fecha').valueAsDate=new Date();
-  document.getElementById('modal-curso').style.display='block';
+  document.getElementById('modal-curso').style.display='flex';
 }
 function closeModalCurso(){document.getElementById('modal-curso').style.display='none';}
 var _cursoParseado=[];
@@ -5030,7 +5086,7 @@ function openModalCalEval(){
   document.getElementById('modal-caleval-titulo').textContent = '+ Agregar Evaluaci\u00f3n';
   document.getElementById('ce-nom').value='';document.getElementById('ce-cont').value='';document.getElementById('ce-obs').value='';
   document.getElementById('ce-fecha').valueAsDate=new Date();document.getElementById('ce-sem2').value=document.getElementById('ce-sem').value;
-  document.getElementById('modal-caleval').style.display='block';
+  document.getElementById('modal-caleval').style.display='flex';
 }
 function editarEval(key, i){
   var ev = (calEvalData[key]||[])[i];
@@ -5043,7 +5099,7 @@ function editarEval(key, i){
   document.getElementById('ce-sem2').value = key.split('-')[1];
   document.getElementById('ce-cont').value = ev.cont || '';
   document.getElementById('ce-obs').value = ev.obs || '';
-  document.getElementById('modal-caleval').style.display='block';
+  document.getElementById('modal-caleval').style.display='flex';
 }
 function closeModalCalEval(){document.getElementById('modal-caleval').style.display='none';_ceEditando=null;}
 function agregarEvaluacion(){
@@ -5121,103 +5177,105 @@ var ALUMNOS = {
 // === MAPA PAGINAS ===
 var MAPA_PAG = {
   1:[
-    {pMin:4,  pMax:5,  u:1,sec:'entrada', nom:'Unit 1: Me and my family',     oas:['OA 1','OA 2','OA 3','OA 4'],                                                              voc:['family','mother','father','brother','sister','grandmother']},
-    {pMin:6,  pMax:11, u:1,sec:'leccion1',nom:'Unit 1: Me and my family',     oas:['OA 1','OA 2','OA 3','OA 4','OA 5','OA 6','OA 7','OA 8','OA 9','OA 10','OA 11','OA 12','OA 13','OA 14'],voc:['family','mother','father','brother','sister','grandmother','grandfather','baby','hello','goodbye']},
-    {pMin:12, pMax:17, u:1,sec:'leccion2',nom:'Unit 1: Me and my family',     oas:['OA 1','OA 2','OA 3','OA 4','OA 5','OA 6','OA 7','OA 8','OA 9','OA 10','OA 11','OA 12','OA 13','OA 14'],voc:['family','mother','father','brother','sister']},
-    {pMin:18, pMax:18, u:1,sec:'game',    nom:'Unit 1: Me and my family',     oas:['OA 12'],                                                                                   voc:['family','hello']},
-    {pMin:19, pMax:19, u:1,sec:'quiz',    nom:'Unit 1: Me and my family',     oas:['OA 2','OA 3','OA 4','OA 5','OA 8','OA 13','OA 14'],                                       voc:['family','mother']},
+    {pMin:4,  pMax:5,  u:1,sec:'entrada', nom:'Unit 1: Me and my family',     oas:['OA 1','OA 2','OA 3','OA 4'],                                                              voc:['mom','dad','sister','brother','grandma']},
+    {pMin:6,  pMax:11, u:1,sec:'leccion1',nom:'Unit 1: Me and my family',     oas:['OA 1','OA 2','OA 3','OA 4','OA 5','OA 6','OA 7','OA 8','OA 9','OA 10','OA 11','OA 12','OA 13','OA 14'],voc:['mom','dad','sister','brother','grandma','grandpa','aunt','uncle','baby']},
+    {pMin:12, pMax:17, u:1,sec:'leccion2',nom:'Unit 1: Me and my family',     oas:['OA 1','OA 2','OA 3','OA 4','OA 5','OA 6','OA 7','OA 8','OA 9','OA 10','OA 11','OA 12','OA 13','OA 14'],voc:['mom','dad','sister','brother']},
+    {pMin:18, pMax:18, u:1,sec:'game',    nom:'Unit 1: Me and my family',     oas:['OA 12'],                                                                                   voc:['mom','dad','sister','brother']},
+    {pMin:19, pMax:19, u:1,sec:'quiz',    nom:'Unit 1: Me and my family',     oas:['OA 2','OA 3','OA 4','OA 5','OA 8','OA 13','OA 14'],                                       voc:['mom','dad']},
     {pMin:20, pMax:21, u:2,sec:'entrada', nom:'Unit 2: At school',            oas:['OA 2','OA 3','OA 4','OA 5'],                                                              voc:['pencil','book','ruler','eraser']},
-    {pMin:22, pMax:27, u:2,sec:'leccion1',nom:'Unit 2: At school',            oas:['OA 1','OA 2','OA 3','OA 4','OA 5','OA 6','OA 7','OA 8','OA 9','OA 10','OA 11','OA 12','OA 13','OA 14'],voc:['pencil','book','ruler','eraser','bag','chair','table','teacher','student','classroom']},
+    {pMin:22, pMax:27, u:2,sec:'leccion1',nom:'Unit 2: At school',            oas:['OA 1','OA 2','OA 3','OA 4','OA 5','OA 6','OA 7','OA 8','OA 9','OA 10','OA 11','OA 12','OA 13','OA 14'],voc:['classroom','board','desk','pencil','book','ruler','eraser','schoolbag','chair','scissors']},
     {pMin:28, pMax:33, u:2,sec:'leccion2',nom:'Unit 2: At school',            oas:['OA 1','OA 2','OA 3','OA 4','OA 7','OA 8','OA 11','OA 12'],                               voc:['pencil','book','ruler','eraser']},
     {pMin:34, pMax:34, u:2,sec:'game',    nom:'Unit 2: At school',            oas:['OA 8'],                                                                                   voc:['book','pencil']},
     {pMin:35, pMax:35, u:2,sec:'quiz',    nom:'Unit 2: At school',            oas:['OA 7','OA 8','OA 9','OA 13','OA 14'],                                                    voc:['pencil','book']},
     {pMin:36, pMax:37, u:3,sec:'entrada', nom:'Unit 3: My body',              oas:['OA 1','OA 2','OA 3','OA 4'],                                                              voc:['head','shoulders','knees','toes']},
-    {pMin:38, pMax:43, u:3,sec:'leccion1',nom:'Unit 3: My body',              oas:['OA 1','OA 2','OA 3','OA 4','OA 5','OA 6','OA 7','OA 8','OA 9','OA 10','OA 11','OA 12','OA 13','OA 14'],voc:['head','shoulders','knees','toes','eyes','ears','mouth','nose','arms','legs']},
+    {pMin:38, pMax:43, u:3,sec:'leccion1',nom:'Unit 3: My body',              oas:['OA 1','OA 2','OA 3','OA 4','OA 5','OA 6','OA 7','OA 8','OA 9','OA 10','OA 11','OA 12','OA 13','OA 14'],voc:['head','shoulders','knees','toes','eyes','mouth','nose','arms','legs','hands']},
     {pMin:44, pMax:49, u:3,sec:'leccion2',nom:'Unit 3: My body',              oas:['OA 1','OA 2','OA 3','OA 7','OA 8','OA 14'],                                              voc:['head','shoulders','knees','toes']},
     {pMin:50, pMax:50, u:3,sec:'game',    nom:'Unit 3: My body',              oas:['OA 7','OA 9'],                                                                            voc:['head','nose']},
     {pMin:51, pMax:51, u:3,sec:'quiz',    nom:'Unit 3: My body',              oas:['OA 2','OA 3','OA 4','OA 7','OA 13','OA 14'],                                             voc:['head','shoulders']},
     {pMin:52, pMax:53, u:4,sec:'entrada', nom:'Unit 4: Domestic animals',     oas:['OA 1','OA 2','OA 3','OA 4'],                                                              voc:['dog','cat','bird','fish']},
-    {pMin:54, pMax:59, u:4,sec:'leccion1',nom:'Unit 4: Domestic animals',     oas:['OA 1','OA 2','OA 3','OA 4','OA 5','OA 6','OA 7','OA 8','OA 9','OA 10','OA 11','OA 12','OA 13','OA 14'],voc:['dog','cat','bird','fish','rabbit','hamster','horse','cow','big','small']},
+    {pMin:54, pMax:59, u:4,sec:'leccion1',nom:'Unit 4: Domestic animals',     oas:['OA 1','OA 2','OA 3','OA 4','OA 5','OA 6','OA 7','OA 8','OA 9','OA 10','OA 11','OA 12','OA 13','OA 14'],voc:['dog','cat','fish','parrot','turtle','rabbit','bird','big','small']},
     {pMin:60, pMax:65, u:4,sec:'leccion2',nom:'Unit 4: Domestic animals',     oas:['OA 1','OA 3','OA 4','OA 6','OA 7','OA 8','OA 11','OA 12','OA 13'],                      voc:['dog','cat','bird','fish']},
     {pMin:66, pMax:66, u:4,sec:'game',    nom:'Unit 4: Domestic animals',     oas:['OA 2','OA 3','OA 4'],                                                                    voc:['dog','cat']},
     {pMin:67, pMax:67, u:4,sec:'quiz',    nom:'Unit 4: Domestic animals',     oas:['OA 3','OA 4','OA 7','OA 8'],                                                             voc:['dog','cat']},
     {pMin:68, pMax:69, u:5,sec:'entrada', nom:'Unit 5: Food',                 oas:['OA 1','OA 2','OA 3','OA 4'],                                                              voc:['apple','banana','milk','bread']},
-    {pMin:70, pMax:75, u:5,sec:'leccion1',nom:'Unit 5: Food',                 oas:['OA 1','OA 2','OA 3','OA 4','OA 5','OA 6','OA 7','OA 8','OA 9','OA 10','OA 11','OA 12','OA 13','OA 14'],voc:['apple','banana','milk','bread','rice','water','juice','orange','egg','chicken']},
+    {pMin:70, pMax:75, u:5,sec:'leccion1',nom:'Unit 5: Food',                 oas:['OA 1','OA 2','OA 3','OA 4','OA 5','OA 6','OA 7','OA 8','OA 9','OA 10','OA 11','OA 12','OA 13','OA 14'],voc:['banana','apple','chicken','cheese','tomato','bread','orange','yogurt','cereal']},
     {pMin:76, pMax:81, u:5,sec:'leccion2',nom:'Unit 5: Food',                 oas:['OA 1','OA 2','OA 3','OA 4','OA 5','OA 7','OA 8','OA 11','OA 12','OA 13','OA 14'],       voc:['apple','banana','milk','bread']},
     {pMin:82, pMax:82, u:5,sec:'game',    nom:'Unit 5: Food',                 oas:['OA 11','OA 12'],                                                                          voc:['apple','banana']},
     {pMin:83, pMax:83, u:5,sec:'quiz',    nom:'Unit 5: Food',                 oas:['OA 2','OA 3','OA 4','OA 13'],                                                            voc:['apple','milk']},
     {pMin:84, pMax:85, u:6,sec:'entrada', nom:'Unit 6: My house',             oas:['OA 1','OA 2','OA 3','OA 4'],                                                              voc:['house','bedroom','kitchen']},
-    {pMin:86, pMax:91, u:6,sec:'leccion1',nom:'Unit 6: My house',             oas:['OA 1','OA 2','OA 3','OA 4','OA 5','OA 6','OA 7','OA 8','OA 9','OA 10','OA 11','OA 12','OA 13','OA 14'],voc:['house','bedroom','kitchen','bathroom','living room','door','window','garden']},
+    {pMin:86, pMax:91, u:6,sec:'leccion1',nom:'Unit 6: My house',             oas:['OA 1','OA 2','OA 3','OA 4','OA 5','OA 6','OA 7','OA 8','OA 9','OA 10','OA 11','OA 12','OA 13','OA 14'],voc:['house','apartment','bedroom','kitchen','bathroom','living room','door','garden','balcony']},
     {pMin:92, pMax:97, u:6,sec:'leccion2',nom:'Unit 6: My house',             oas:['OA 1','OA 2','OA 3','OA 4','OA 7','OA 8','OA 11','OA 13','OA 14'],                      voc:['house','bedroom','kitchen']},
     {pMin:98, pMax:98, u:6,sec:'game',    nom:'Unit 6: My house',             oas:['OA 11','OA 12'],                                                                          voc:['bedroom','kitchen']},
     {pMin:99, pMax:99, u:6,sec:'quiz',    nom:'Unit 6: My house',             oas:['OA 2','OA 3','OA 7','OA 8','OA 9'],                                                      voc:['house','bedroom']},
     {pMin:100,pMax:101,u:7,sec:'entrada', nom:'Unit 7: The weather',          oas:['OA 2','OA 3','OA 4'],                                                                    voc:['sunny','rainy','cloudy']},
-    {pMin:102,pMax:107,u:7,sec:'leccion1',nom:'Unit 7: The weather',          oas:['OA 1','OA 2','OA 3','OA 4','OA 5','OA 6','OA 7','OA 8','OA 9','OA 10','OA 11','OA 12','OA 13','OA 14'],voc:['sunny','rainy','cloudy','windy','cold','hot','warm','snow','umbrella','boots']},
+    {pMin:102,pMax:107,u:7,sec:'leccion1',nom:'Unit 7: The weather',          oas:['OA 1','OA 2','OA 3','OA 4','OA 5','OA 6','OA 7','OA 8','OA 9','OA 10','OA 11','OA 12','OA 13','OA 14'],voc:['sunny','rainy','cloudy','windy','cold','hot','summer','winter','spring','fall','boots','umbrella']},
     {pMin:108,pMax:113,u:7,sec:'leccion2',nom:'Unit 7: The weather',          oas:['OA 1','OA 2','OA 3','OA 4','OA 7','OA 8','OA 9','OA 12','OA 13','OA 14'],               voc:['sunny','rainy','cloudy']},
     {pMin:114,pMax:114,u:7,sec:'game',    nom:'Unit 7: The weather',          oas:['OA 7','OA 12'],                                                                           voc:['sunny','rainy']},
     {pMin:115,pMax:115,u:7,sec:'quiz',    nom:'Unit 7: The weather',          oas:['OA 2','OA 5','OA 7','OA 9'],                                                             voc:['sunny','cloudy']},
     {pMin:116,pMax:117,u:8,sec:'entrada', nom:'Unit 8: Toys and games',       oas:['OA 2','OA 3','OA 4','OA 12'],                                                            voc:['ball','doll','car']},
-    {pMin:118,pMax:123,u:8,sec:'leccion1',nom:'Unit 8: Toys and games',       oas:['OA 1','OA 2','OA 3','OA 4','OA 5','OA 6','OA 7','OA 8','OA 9','OA 10','OA 11','OA 12','OA 13','OA 14'],voc:['ball','doll','car','kite','bike','train','airplane','teddy bear','swing','rope']},
+    {pMin:118,pMax:123,u:8,sec:'leccion1',nom:'Unit 8: Toys and games',       oas:['OA 1','OA 2','OA 3','OA 4','OA 5','OA 6','OA 7','OA 8','OA 9','OA 10','OA 11','OA 12','OA 13','OA 14'],voc:['ball','doll','car','kite','plane','teddy bear','jump rope','swing']},
     {pMin:124,pMax:129,u:8,sec:'leccion2',nom:'Unit 8: Toys and games',       oas:['OA 1','OA 2','OA 3','OA 7','OA 8','OA 9','OA 11','OA 12','OA 14'],                      voc:['ball','doll','car']},
     {pMin:130,pMax:130,u:8,sec:'game',    nom:'Unit 8: Toys and games',       oas:['OA 12'],                                                                                  voc:['ball','kite']},
     {pMin:131,pMax:131,u:8,sec:'quiz',    nom:'Unit 8: Toys and games',       oas:['OA 2','OA 4'],                                                                            voc:['ball','doll']}
   ],
   2:[
-    {pMin:3,  pMax:19, u:1,sec:'leccion1',nom:'Unit 1: Wild animals',         oas:['OA 1','OA 2','OA 3','OA 6','OA 7','OA 11','OA 12','OA 13'],voc:['monkey','turtle','snake','lion','tiger','zebra','rhino','elephant','giraffe']},
-    {pMin:20, pMax:35, u:2,sec:'leccion1',nom:'Unit 2: Sports and free time', oas:['OA 1','OA 2','OA 3','OA 7','OA 8','OA 11','OA 12','OA 13'],voc:['football','basketball','swimming','running','cycling','dancing','singing']},
+    {pMin:3,  pMax:19, u:1,sec:'leccion1',nom:'Unit 1: Wild animals',         oas:['OA 1','OA 2','OA 3','OA 6','OA 7','OA 11','OA 12','OA 13'],voc:['monkey','rhino','turtle','snake','lion','tiger','zebra','hippo']},
+    {pMin:20, pMax:35, u:2,sec:'leccion1',nom:'Unit 2: Sports and free time', oas:['OA 1','OA 2','OA 3','OA 7','OA 8','OA 11','OA 12','OA 13'],voc:['football','basketball','tennis','ping pong','swimming','skating','karate','riding bike','dancing','singing','drawing','painting','reading']},
     {pMin:36, pMax:51, u:3,sec:'leccion1',nom:'Unit 3: My clothes',           oas:['OA 1','OA 2','OA 3','OA 7','OA 11','OA 12','OA 13','OA 14'],voc:['dress','hat','coat','boots','socks','sweater','jacket','sneakers','t-shirt','shoes','scarf','pants']},
-    {pMin:52, pMax:67, u:4,sec:'leccion1',nom:'Unit 4: Jobs and professions',  oas:['OA 1','OA 2','OA 3','OA 7','OA 8','OA 11','OA 12','OA 14'],voc:['doctor','teacher','firefighter','police','chef','engineer','artist','nurse']},
-    {pMin:68, pMax:83, u:5,sec:'leccion1',nom:'Unit 5: My classmates',        oas:['OA 1','OA 2','OA 3','OA 7','OA 11','OA 12','OA 13','OA 14'],voc:['friend','classmate','tall','short','funny','kind','smart','share']},
-    {pMin:84, pMax:99, u:6,sec:'leccion1',nom:'Unit 6: My city',              oas:['OA 1','OA 2','OA 3','OA 7','OA 9','OA 11','OA 12','OA 13'],voc:['park','school','hospital','supermarket','bank','library','street']},
-    {pMin:100,pMax:115,u:7,sec:'leccion1',nom:'Unit 7: Festivities',          oas:['OA 1','OA 2','OA 3','OA 4','OA 7','OA 11','OA 12','OA 14'],voc:['birthday','party','cake','candles','present','celebrate','dance']},
-    {pMin:116,pMax:131,u:8,sec:'leccion1',nom:'Unit 8: Musical instruments',  oas:['OA 1','OA 2','OA 3','OA 4','OA 7','OA 9','OA 11','OA 12','OA 14'],voc:['guitar','piano','drums','violin','flute','trumpet','music']}
+    {pMin:52, pMax:67, u:4,sec:'leccion1',nom:'Unit 4: Jobs and professions',  oas:['OA 1','OA 2','OA 3','OA 7','OA 8','OA 11','OA 12','OA 14'],voc:['doctor','teacher','firefighter','chef','engineer','vet','pilot','dentist','musician']},
+    {pMin:68, pMax:83, u:5,sec:'leccion1',nom:'Unit 5: My classmates',        oas:['OA 1','OA 2','OA 3','OA 7','OA 11','OA 12','OA 13','OA 14'],voc:['friend','classmate','tall','short','funny','kind','shy','curly hair','blond hair','black hair','green eyes','blue eyes']},
+    {pMin:84, pMax:99, u:6,sec:'leccion1',nom:'Unit 6: My city',              oas:['OA 1','OA 2','OA 3','OA 7','OA 9','OA 11','OA 12','OA 13'],voc:['airport','park','cinema','bus stop','school','hospital','museum','restaurant','supermarket','library','zoo']},
+    {pMin:100,pMax:115,u:7,sec:'leccion1',nom:'Unit 7: Festivities',          oas:['OA 1','OA 2','OA 3','OA 4','OA 7','OA 11','OA 12','OA 14'],voc:['birthday','Halloween','Christmas','Easter','New Year','celebration','costume','presents','fireworks','cake']},
+    {pMin:116,pMax:131,u:8,sec:'leccion1',nom:'Unit 8: Musical instruments',  oas:['OA 1','OA 2','OA 3','OA 4','OA 7','OA 9','OA 11','OA 12','OA 14'],voc:['guitar','piano','violin','trumpet','drums','tambourine','recorder']}
   ],
   3:[
-    {pMin:1, pMax:20, u:1,sec:'leccion1',nom:'Unit 1: My school day',         oas:['OA 1','OA 2','OA 3','OA 7','OA 11','OA 12','OA 13'],voc:['schedule','morning','afternoon','clock','time','Monday','routine']},
-    {pMin:21,pMax:40, u:2,sec:'leccion1',nom:'Unit 2: My neighborhood',       oas:['OA 1','OA 2','OA 3','OA 7','OA 11','OA 12','OA 13','OA 14'],voc:['bakery','pharmacy','park','corner','street','near','far','turn left']},
-    {pMin:41,pMax:60, u:3,sec:'leccion1',nom:'Unit 3: Food and health',       oas:['OA 1','OA 2','OA 3','OA 7','OA 9','OA 11','OA 12','OA 14'],voc:['vegetables','fruit','meat','dairy','healthy','unhealthy','breakfast']},
-    {pMin:61,pMax:80, u:4,sec:'leccion1',nom:'Unit 4: Free time',             oas:['OA 1','OA 2','OA 3','OA 7','OA 9','OA 11','OA 12','OA 13'],voc:['hobby','weekend','sport','read','draw','play','watch','listen']}
+    {pMin:6,  pMax:24, u:1,sec:'leccion1',nom:'Unit 1: Time for school',       oas:['OA 1','OA 2','OA 3','OA 7','OA 11','OA 12','OA 13'],voc:['pencil','eraser','scissors','schoolbag','pencil case','book','ruler','Monday','Math','Science','English','P.E.']},
+    {pMin:26, pMax:44, u:2,sec:'leccion1',nom:'Unit 2: Sports and free-time activities',oas:['OA 1','OA 2','OA 3','OA 7','OA 9','OA 11','OA 12','OA 13'],voc:['soccer','basketball','cycling','swimming','rollerblade','run','tennis','painting','drawing','dancing']},
+    {pMin:46, pMax:64, u:3,sec:'leccion1',nom:'Unit 3: Seasons come and go',    oas:['OA 1','OA 2','OA 3','OA 7','OA 9','OA 11','OA 12','OA 14'],voc:['sunny','raining','windy','snowing','hot','cold','spring','summer','winter','fall','jacket','umbrella']},
+    {pMin:66, pMax:84, u:4,sec:'leccion1',nom:'Unit 4: Wild animals',           oas:['OA 1','OA 2','OA 3','OA 7','OA 9','OA 11','OA 12','OA 13'],voc:['fox','bear','giraffe','whale','koala','kangaroo','monkey']},
+    {pMin:86, pMax:104,u:5,sec:'leccion1',nom:'Unit 5: Transport',              oas:['OA 1','OA 2','OA 3','OA 7','OA 9','OA 11','OA 12','OA 14'],voc:['scooter','bike','car','bus','subway','train','plane','taxi','boat']},
+    {pMin:106,pMax:124,u:6,sec:'leccion1',nom:'Unit 6: Summer fun',             oas:['OA 1','OA 2','OA 3','OA 7','OA 9','OA 11','OA 12','OA 13'],voc:['surfing','playing frisbee','building sandcastles','swimming','playing cards','beach soccer','ice cream']}
   ],
   4:[
-    {pMin:6,  pMax:24, u:1,sec:'leccion1',nom:'Unit 1: Around town',          oas:['OA 1','OA 2','OA 3','OA 7','OA 11','OA 12','OA 13'],voc:['town','city','house','neighborhood','pool','library','store']},
-    {pMin:26, pMax:44, u:2,sec:'leccion1',nom:'Unit 2: Around the world',     oas:['OA 1','OA 2','OA 3','OA 7','OA 9','OA 11','OA 12','OA 14'],voc:['country','continent','nationality','flag','language','culture','travel']},
-    {pMin:46, pMax:64, u:3,sec:'leccion1',nom:'Unit 3: The universe',         oas:['OA 1','OA 2','OA 3','OA 7','OA 8','OA 11','OA 12','OA 13'],voc:['planet','sun','moon','star','solar system','space','astronaut','Earth']},
-    {pMin:66, pMax:84, u:4,sec:'leccion1',nom:'Unit 4: Minibeasts',           oas:['OA 1','OA 2','OA 3','OA 7','OA 8','OA 11','OA 12','OA 14'],voc:['butterfly','bee','ant','spider','worm','ladybug','beetle','caterpillar']},
-    {pMin:86, pMax:104,u:5,sec:'leccion1',nom:'Unit 5: Summer camp',          oas:['OA 1','OA 2','OA 3','OA 7','OA 9','OA 11','OA 12','OA 13'],voc:['camping','tent','campfire','hiking','kayak','swimming','teamwork']},
-    {pMin:106,pMax:124,u:6,sec:'leccion1',nom:'Unit 6: Story world',          oas:['OA 1','OA 2','OA 3','OA 6','OA 7','OA 9','OA 11','OA 13','OA 14'],voc:['hero','villain','magic','castle','dragon','princess','story']}
+    {pMin:6,  pMax:24, u:1,sec:'leccion1',nom:'Unit 1: Around town',          oas:['OA 1','OA 2','OA 3','OA 7','OA 11','OA 12','OA 13'],voc:['zoo','museum','cinema','hospital','park','library','swimming pool','shopping center','station','city','town','village']},
+    {pMin:26, pMax:44, u:2,sec:'leccion1',nom:'Unit 2: Around the world',     oas:['OA 1','OA 2','OA 3','OA 7','OA 9','OA 11','OA 12','OA 14'],voc:['Chile','Italy','USA','Spain','China','Ireland','Spanish','English','Italian','French']},
+    {pMin:46, pMax:64, u:3,sec:'leccion1',nom:'Unit 3: The universe',         oas:['OA 1','OA 2','OA 3','OA 7','OA 8','OA 11','OA 12','OA 13'],voc:['the Sun','the Moon','Mercury','Venus','Earth','Mars','Jupiter','Saturn','astronaut','galaxy']},
+    {pMin:66, pMax:84, u:4,sec:'leccion1',nom:'Unit 4: Minibeasts',           oas:['OA 1','OA 2','OA 3','OA 7','OA 8','OA 11','OA 12','OA 14'],voc:['spider','bee','butterfly','ladybug','beetle','caterpillar','grasshopper','moth','snail']},
+    {pMin:86, pMax:104,u:5,sec:'leccion1',nom:'Unit 5: Summer camp',          oas:['OA 1','OA 2','OA 3','OA 7','OA 9','OA 11','OA 12','OA 13'],voc:['hiking','canoeing','fishing','campfire','rock climbing','zip-lining','camping','swimming']},
+    {pMin:106,pMax:124,u:6,sec:'leccion1',nom:'Unit 6: Story world',          oas:['OA 1','OA 2','OA 3','OA 6','OA 7','OA 9','OA 11','OA 13','OA 14'],voc:['blonde hair','black hair','blue eyes','shy','curious','funny','kind','strong','superhero','superpowers']}
   ],
   5:[
-    {pMin:6,  pMax:55, u:1,sec:'leccion1',nom:'Unit 1: Traveling',            oas:['OA 1','OA 2','OA 5','OA 6','OA 10','OA 11','OA 14','OA 15'],voc:['travel','destination','Chile','landscape','desert','forest','beach','mountain']},
-    {pMin:56, pMax:59, u:2,sec:'leccion1',nom:'Unit 2: Cultures and traditions',oas:['OA 1','OA 2','OA 5','OA 7','OA 11','OA 12','OA 14','OA 15'],voc:['tradition','festival','custom','celebrate','dance','music','food','costume']},
-    {pMin:60, pMax:83, u:3,sec:'leccion1',nom:'Unit 3: Languages',            oas:['OA 1','OA 3','OA 5','OA 6','OA 9','OA 11','OA 13','OA 14'],voc:['language','bilingual','communicate','speak','learn','English','Mapudungun']},
-    {pMin:86, pMax:107,u:4,sec:'leccion1',nom:'Unit 4: Jobs',                 oas:['OA 1','OA 2','OA 5','OA 7','OA 11','OA 12','OA 14','OA 15'],voc:['job','profession','work','doctor','engineer','artist','teacher']}
+    {pMin:6,  pMax:31, u:1,sec:'leccion1',nom:'Unit 1: Traveling',            oas:['OA 1','OA 2','OA 5','OA 6','OA 10','OA 11','OA 14','OA 15'],voc:['boat','bus','ferry','helicopter','bicycle','van','turn left','turn right','straight on']},
+    {pMin:32, pMax:57, u:2,sec:'leccion1',nom:'Unit 2: Cultures and traditions',oas:['OA 1','OA 2','OA 5','OA 7','OA 11','OA 12','OA 14','OA 15'],voc:['cueca','empanadas','pastel de choclo','mote con huesillo','National Holidays','Christmas','New Year','kites']},
+    {pMin:60, pMax:85, u:3,sec:'leccion1',nom:'Unit 3: Languages',            oas:['OA 1','OA 3','OA 5','OA 6','OA 9','OA 11','OA 13','OA 14'],voc:['English','Spanish','French','German','Italian','Japanese','Chinese','Portuguese']},
+    {pMin:86, pMax:111,u:4,sec:'leccion1',nom:'Unit 4: Jobs',                 oas:['OA 1','OA 2','OA 5','OA 7','OA 11','OA 12','OA 14','OA 15'],voc:['plumber','writer','dentist','vet','waitress','hairdresser','architect','taxi driver']}
   ],
   6:[
-    {pMin:6,  pMax:55, u:1,sec:'leccion1',nom:'Unit 1: Artistic inspirations',oas:['OA 1','OA 2','OA 5','OA 6','OA 10','OA 11','OA 14','OA 15'],voc:['art','painting','sculpture','music','dance','theater','inspiration']},
-    {pMin:56, pMax:59, u:2,sec:'leccion1',nom:'Unit 2: World festivals',      oas:['OA 1','OA 2','OA 5','OA 7','OA 11','OA 12','OA 14','OA 15'],voc:['festival','carnival','parade','costume','celebrate','tradition','culture']},
-    {pMin:60, pMax:83, u:3,sec:'leccion1',nom:'Unit 3: Climate action',       oas:['OA 1','OA 3','OA 5','OA 7','OA 9','OA 11','OA 14','OA 16'],voc:['climate','environment','recycle','pollution','renewable','energy']},
-    {pMin:86, pMax:107,u:4,sec:'leccion1',nom:'Unit 4: Foreign friends',      oas:['OA 1','OA 2','OA 5','OA 7','OA 11','OA 12','OA 14','OA 15'],voc:['friendship','culture','exchange','penpal','communicate','different']}
+    {pMin:6,  pMax:30, u:1,sec:'leccion1',nom:'Unit 1: Artistic inspirations',oas:['OA 1','OA 2','OA 5','OA 6','OA 10','OA 11','OA 14','OA 15'],voc:['painting','sculpture','pottery','drawing','acting','dancing','theater','comics','clay','canvas']},
+    {pMin:32, pMax:58, u:2,sec:'leccion1',nom:'Unit 2: World festivals',      oas:['OA 1','OA 2','OA 5','OA 7','OA 11','OA 12','OA 14','OA 15'],voc:['carnival','parade','garlands','mask','costume','procession','float','flags']},
+    {pMin:60, pMax:84, u:3,sec:'leccion1',nom:'Unit 3: Climate action',       oas:['OA 1','OA 3','OA 5','OA 7','OA 9','OA 11','OA 14','OA 16'],voc:['extinction','wildfire','deforestation','floods','ice melting','pollution','climate change']},
+    {pMin:86, pMax:112,u:4,sec:'leccion1',nom:'Unit 4: Foreign friends',      oas:['OA 1','OA 2','OA 5','OA 7','OA 11','OA 12','OA 14','OA 15'],voc:['shake hands','bow','kiss on the cheek','immigration','greet','culture','country']}
   ],
   7:[
-    {pMin:1,  pMax:28, u:1,sec:'leccion1',nom:'Unit 1: Feelings and opinions',oas:['OA 1','OA 2','OA 3','OA 5','OA 6','OA 9','OA 13','OA 14'],voc:['feeling','emotion','happy','sad','angry','nervous','excited','opinion']},
+    {pMin:1,  pMax:28, u:1,sec:'leccion1',nom:'Unit 1: Feelings and opinions',oas:['OA 1','OA 2','OA 3','OA 5','OA 6','OA 9','OA 13','OA 14'],voc:['happy','sad','angry','nervous','excited','calm','anxious','relaxed','friendly','honest','generous','talkative','tall','short']},
     {pMin:29, pMax:57, u:2,sec:'leccion1',nom:'Unit 2: Healthy habits',       oas:['OA 1','OA 2','OA 3','OA 9','OA 10','OA 11','OA 14','OA 15'],voc:['healthy','exercise','diet','sleep','water','vegetable','fruit','routine']},
-    {pMin:58, pMax:86, u:3,sec:'leccion1',nom:'Unit 3: Sports and free time', oas:['OA 1','OA 2','OA 5','OA 6','OA 9','OA 13','OA 14','OA 15'],voc:['sport','team','competition','win','lose','practice','training','player']},
-    {pMin:87, pMax:115,u:4,sec:'leccion1',nom:'Unit 4: Green issues',         oas:['OA 1','OA 3','OA 5','OA 7','OA 9','OA 12','OA 14','OA 16'],voc:['environment','recycle','pollution','climate','energy','conservation']}
+    {pMin:58, pMax:86, u:3,sec:'leccion1',nom:'Unit 3: Sports and free time', oas:['OA 1','OA 2','OA 5','OA 6','OA 9','OA 13','OA 14','OA 15'],voc:['play basketball','play soccer','play video games','play cards','go camping','go swimming','go running','go skiing','draw and paint','take photos','do karate','dance']},
+    {pMin:87, pMax:115,u:4,sec:'leccion1',nom:'Unit 4: Green issues',         oas:['OA 1','OA 3','OA 5','OA 7','OA 9','OA 12','OA 14','OA 16'],voc:['air pollution','water pollution','land pollution','noise pollution','reduce','reuse','recycle','climate change']}
   ],
   8:[
-    {pMin:1,  pMax:50, u:1,sec:'leccion1',nom:'Unit 1: Artful expressions',   oas:['OA 1','OA 2','OA 5','OA 6','OA 9','OA 13','OA 14','OA 15'],voc:['art','expression','culture','creativity','design','music','literature']},
-    {pMin:51, pMax:100,u:2,sec:'leccion1',nom:'Unit 2: Discoveries',          oas:['OA 1','OA 3','OA 5','OA 9','OA 10','OA 13','OA 14','OA 16'],voc:['discovery','invention','science','technology','innovation','research']},
-    {pMin:101,pMax:140,u:3,sec:'leccion1',nom:'Unit 3: Technology',           oas:['OA 1','OA 2','OA 5','OA 9','OA 11','OA 13','OA 15','OA 16'],voc:['technology','digital','internet','social media','artificial intelligence']},
-    {pMin:141,pMax:180,u:4,sec:'leccion1',nom:'Unit 4: Equality and diversity',oas:['OA 1','OA 3','OA 5','OA 7','OA 9','OA 12','OA 14','OA 15'],voc:['equality','diversity','inclusion','rights','respect','culture','identity']}
+    {pMin:1,  pMax:50, u:1,sec:'leccion1',nom:'Unit 1: Artful expressions',   oas:['OA 1','OA 2','OA 5','OA 6','OA 9','OA 13','OA 14','OA 15'],voc:['painting','sculpture','mural','graffiti','spray paint','recycled art','digital painting']},
+    {pMin:51, pMax:100,u:2,sec:'leccion1',nom:'Unit 2: Discoveries',          oas:['OA 1','OA 3','OA 5','OA 9','OA 10','OA 13','OA 14','OA 16'],voc:['epidemiology','astronomy','archaeology','sustainability science','zoology','botany','ecology']},
+    {pMin:101,pMax:140,u:3,sec:'leccion1',nom:'Unit 3: Technology & Innovation',oas:['OA 1','OA 2','OA 5','OA 9','OA 11','OA 13','OA 15','OA 16'],voc:['energy-efficient','biotechnology','solar-power','e-waste','carbon emissions','nanotechnology','greenhouse gases','sustainable']},
+    {pMin:141,pMax:180,u:4,sec:'leccion1',nom:'Unit 4: Equality and diversity',oas:['OA 1','OA 3','OA 5','OA 7','OA 9','OA 12','OA 14','OA 15'],voc:['cultural diversity','cultural background','differently abled','multicultural','ethnicity','identity','respect','heritage']}
   ]
 };
 // === ESTRUCTURAS GRAMATICALES ===
 var ESTRUCTURAS = {
   1:{all:['This is my...','I have a...','It is big/small/red/blue','How many...?','Numbers 1-10','Colors: red, blue, green, yellow'],1:['This is my mom/dad/brother/sister','Hello! My name is...','How are you?'],2:['This is a pencil/book/ruler/eraser','I have a schoolbag','Colors + objects'],3:['I have two eyes/arms/legs','Touch your head/shoulders/knees','Body parts + numbers'],4:['This is a dog/cat/bird','It is big/small/fast/slow','I have a pet'],5:['I like apples/bananas/milk','Do you like...? Yes/No','Food adjectives'],6:['This is my bedroom/kitchen','I sleep/eat in the...','Prepositions: in/on/under'],7:['It is sunny/rainy/cold/hot','What is the weather like?','Weather + clothes'],8:['I have a ball/doll/kite','My favorite toy is...','Can you...?']},
   2:{all:['I like/love/enjoy...','I can/cannot...','This is a...','Colors + adjectives'],1:['This is a lion/tiger/elephant','It is big/dangerous/fast','Wild animals live in...'],2:['I like football/swimming/dancing','I can play/swim/run','We like...'],3:['I am wearing a shirt/dress','She is wearing...','What color is your...?'],4:['My mom is a doctor/teacher','She works at the hospital','I want to be a/an...'],5:['My friend is tall/short/funny','We play/share/help each other'],6:['There is a park/school near...','I go to the... every day'],7:['Today is my birthday!','We celebrate with cake/presents'],8:['I like/play the guitar/piano','Music is...']},
-  3:{all:['I have... on Monday/Tuesday','What time is it? It is...','Present simple: I go/play/have'],1:['I have English/Math on Monday','I wake up at... oclock'],2:['There is a bakery near my house','Turn left/right on... street'],3:['I like fruit and vegetables','I eat... for breakfast/lunch'],4:['I like reading/drawing/playing','My favorite hobby is...']},
-  4:{all:['There is/are...','Where is/are...?','Present continuous: I am playing'],1:['There is a park/library in my town','I live in a house/apartment'],2:['I am from Chile/Canada','What nationality are you?'],3:['The sun is a star. The Earth is a planet','There are 8 planets'],4:['The butterfly/bee has... legs/wings','It is a small/big creature'],5:['I can/cannot swim/hike/kayak','It is fun/exciting'],6:['Once upon a time there was a...','The hero/princess/dragon...']},
-  5:{all:['You can visit/see/find...','It is next to/near/between...','Present simple + adverbs of frequency'],1:['You can travel by plane/bus/boat','It is famous for...'],2:['People celebrate... in/on...','They wear/eat/dance during...'],3:['People speak English/Spanish in...','English is spoken in...'],4:['A doctor/engineer works at/in...','In the future I want to be...']},
+  3:{all:['Do you have...? Yes, I do / No, I don\'t','Can you...? Yes, I can / No, I can\'t','Is it...? Yes, it is / No, it isn\'t'],1:['Do you have a pencil? Yes, I do / No, I don\'t','I have Math/Science/English on Monday'],2:['He can play soccer. She can\'t ride a bike','What can you do?'],3:['It\'s sunny/raining/windy/snowing/hot/cold','In summer/winter/spring/fall I wear...'],4:['Does it have legs/wings/a tail/claws?','Yes, it does / No, it doesn\'t'],5:['Is it fast/slow/big/small? Is it a plane?','Yes, it is / No, it isn\'t'],6:['Do you like surfing/swimming/building sandcastles?','Yes, I do / No, I don\'t']},
+  4:{all:['There is/are...','Where is/are...?','Present continuous: I am playing'],1:['There is a park/library in my town','I live in a house/apartment'],2:['I am from Chile/Canada','What nationality are you?'],3:['The sun is a star. The Earth is a planet','There are 8 planets'],4:['The butterfly/bee has... legs/wings','It is a small/big creature'],5:['I can/cannot swim/hike/kayak','It is fun/exciting'],6:['She has long, blonde/black hair. She has blue eyes','He/She is shy/curious/funny/kind/strong','What can your superhero do? What is he/she doing now?']},
+  5:{all:['You can visit/see/find...','It is next to/near/between...','Present simple + adverbs of frequency'],1:['You can travel by plane/bus/boat','It is famous for...'],2:['People celebrate... in/on...','They wear/eat/dance during...'],3:['Do you speak Spanish/French? Yes, I do / No, I don\'t','How do you say... in English/Italian?'],4:['A doctor/engineer works at/in...','In the future I want to be...']},
   6:{all:['I like/love/enjoy + verb-ing','Past simple: liked/painted/danced','Comparatives and superlatives'],1:['I like using/taking/creating...','She paints on a canvas'],2:['People celebrate... in/on...','The festival is famous for...'],3:['We should/must recycle/reduce','Environmental problems and solutions'],4:['My penpal is from... She likes...','We communicate by email/video']},
   7:{all:['I feel/look/seem happy/sad/nervous','When I feel... I...','Because, first, second, next, finally'],1:['I feel happy/sad/angry because...','What is the matter?'],2:['You should drink water. You shouldn\'t drink soda (recommendations)','You must eat 5 meals a day. You mustn\'t have energy drinks (obligations/prohibitions)','How often do you eat junk food? I always/sometimes/never...','Is it physical hunger or emotional hunger? Emotions are important too (connecting ideas: or / too-also)'],3:['I play/do/go... on weekends','Past simple: went/played/ran'],4:['We should/must reduce/reuse/recycle','Modal verbs: could/should/must']},
   8:{all:['Past simple: liked/learned/worked/felt','He/She was born in...','Present perfect: I have seen/done'],1:['Leonardo da Vinci was born in Italy','He felt curious/proud because...'],2:['Scientists discovered/invented...','The invention of... changed the world'],3:['People use technology to communicate','Without technology we could not...'],4:['Everyone deserves/has the right to...','We should respect/include people']}
@@ -5277,6 +5335,7 @@ function filtrarOAporDesc() {
     }
   }
 }
+var _pcTemaAutoFill = '';
 function detectarOAPaginas() {
   var pagEl = document.getElementById('pc-pag');
   if (!pagEl) return;
@@ -5296,7 +5355,10 @@ function detectarOAPaginas() {
   });
   if(mejor&&mejorSc>0){
     var temaEl=document.getElementById('pc-tema');
-    if(temaEl&&!temaEl.value.trim())temaEl.value=mejor.nom;
+    if(temaEl && (!temaEl.value.trim() || temaEl.value === _pcTemaAutoFill)){
+      temaEl.value = mejor.nom;
+      _pcTemaAutoFill = mejor.nom;
+    }
     var oasArr=Array.isArray(OAS[c])?OAS[c]:[];
     var oasPrinc=mejor.oas||[];
     var pcOa=document.getElementById('pc-oa');
